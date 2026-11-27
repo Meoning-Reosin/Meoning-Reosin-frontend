@@ -5,17 +5,21 @@
  *
  * 백엔드: GET /places/{id}, /places/{id}/operating-info, /places/{id}/script
  * 혼잡도는 서울시 실시간 도시데이터 연동 전이라 '준비 중'으로 둔다.
- * TODO(bookmark 브랜치): 찜(♥) 버튼 / TODO(itinerary 브랜치): 일정에 담기 버튼
+ * 찜(♥): 로그인 안 했으면 로그인 안내 창. 로그인 상태가 바뀌면 상세를 다시 받아 찜 여부를 맞춘다.
+ * TODO(itinerary 브랜치): 일정에 담기 버튼
  */
 import { useEffect, useState } from 'react'
 import { useNavigate, useParams, useSearchParams } from 'react-router-dom'
 import { getOperatingInfo, getPlace, getScript } from '../api/places.js'
+import { useAuth } from '../auth/AuthContext.jsx'
 import BottomNav from '../components/BottomNav.jsx'
 import GuideLine from '../components/GuideLine.jsx'
 import Header from '../components/Header.jsx'
 import Photo from '../components/Photo.jsx'
 import ShareDialog from '../components/ShareDialog.jsx'
+import Icon from '../components/icons.jsx'
 import { useLanguage } from '../i18n/LanguageContext.jsx'
+import useBookmark from '../lib/useBookmark.js'
 
 const CROWD_SOURCE = 'https://data.seoul.go.kr/SeoulRtd/map'
 const ODII_HOME = 'https://www.odii.kr/smarttour_web/home/main'
@@ -125,7 +129,10 @@ export default function PlaceDetail() {
   const tab = Number(params.get('tab')) || 0
   const [sharing, setSharing] = useState(false)
 
-  const detail = useLazy(() => getPlace(placeId), true, [placeId, lang])
+  const { user } = useAuth()
+  // user?.id 를 넣어서 로그인·로그아웃하면 찜 여부(is_bookmarked)를 다시 받는다.
+  const detail = useLazy(() => getPlace(placeId), true, [placeId, lang, user?.id ?? 'guest'])
+  const bookmark = useBookmark(detail.data)
   const operating = useLazy(() => getOperatingInfo(placeId), tab === 1, [placeId, lang])
   const script = useLazy(() => getScript(placeId), tab === 3, [placeId, lang])
 
@@ -184,9 +191,21 @@ export default function PlaceDetail() {
               <button className="icon" aria-label={t('장소 공유', 'Share place')} onClick={() => setSharing(true)}>
                 <ShareIcon />
               </button>
+              <button
+                className="icon"
+                aria-label={bookmark.saved ? t('찜 해제', 'Remove from saves') : t('찜하기', 'Save place')}
+                aria-pressed={bookmark.saved}
+                disabled={bookmark.busy}
+                onClick={bookmark.toggle}
+                style={{ color: bookmark.saved ? '#9b604d' : 'inherit' }}
+              >
+                {bookmark.saved ? '♥' : <Icon name="heart" />}
+              </button>
             </div>
           </div>
-          <div className="small">{otherName}</div>
+          <div className="small">
+            {otherName} · {t('찜', 'Saves')} {bookmark.count}
+          </div>
           <div className="plain-tags">
             {place.categories.map((category) => (
               <span key={category.category_id}>#{category.name}</span>
