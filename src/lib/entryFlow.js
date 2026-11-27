@@ -47,8 +47,17 @@ export function nextAfterLocation() {
   return '/privacy-consent'
 }
 
-/** 첫 진입을 끝내고 홈으로 */
+/** 첫 진입을 끝내고 홈으로. '다시 보지 않기'를 안 골랐으면 홈에서 온보딩(S03~S05)을 띄운다. */
 export function finishEntry() {
   markEntryDone()
+  if (!local.get('skip_tutorial', false)) session.set('coach_pending', true)
   return '/'
+}
+
+// --- 온보딩 (S03~S05): 홈 위에 뜨는 3단계 안내 ---
+export const coachPending = () => session.get('coach_pending', false)
+
+export function finishCoach(skipNextTime) {
+  session.set('coach_pending', false)
+  local.set('skip_tutorial', skipNextTime)
 }
