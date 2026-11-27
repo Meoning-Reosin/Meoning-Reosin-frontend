@@ -46,7 +46,14 @@ export default function Menu() {
         { label: t('이용자 추천 코스', 'Community walks'), onClick: go('/community') },
       ],
     ],
-    ['Settings', [{ label: t('서비스 설정', 'Service settings'), onClick: go('/settings') }]],
+    [
+      'Settings',
+      [
+        { label: t('서비스 설정', 'Service settings'), onClick: go('/settings') },
+        // 프로토타입은 서비스 설정 안에 있었다. 설정 화면(auth 브랜치)이 생기면 그쪽으로 옮겨도 된다.
+        { label: t('콘텐츠 출처', 'Content credits'), onClick: go('/credits') },
+      ],
+    ],
   ]
 
   return (

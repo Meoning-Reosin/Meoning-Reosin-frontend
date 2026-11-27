@@ -8,13 +8,20 @@ import { Navigate, Route, Routes } from 'react-router-dom'
 import AppShell from './components/AppShell.jsx'
 import { entryDone, introPlayed } from './lib/entryFlow.js'
 import ComingSoon from './pages/ComingSoon.jsx'
+import CourseDetail from './pages/CourseDetail.jsx'
+import Courses from './pages/Courses.jsx'
+import Credits from './pages/Credits.jsx'
 import Events from './pages/Events.jsx'
 import Home from './pages/Home.jsx'
 import Language from './pages/Language.jsx'
 import LocationConsent from './pages/LocationConsent.jsx'
 import Menu from './pages/Menu.jsx'
 import Opening from './pages/Opening.jsx'
+import PlaceDetail from './pages/PlaceDetail.jsx'
+import Places from './pages/Places.jsx'
 import PrivacyConsent from './pages/PrivacyConsent.jsx'
+import RelatedPlaces from './pages/RelatedPlaces.jsx'
+import Relation from './pages/Relation.jsx'
 import Search from './pages/Search.jsx'
 
 /** 첫 진입을 마친 뒤에만 홈을 보여 준다. */
@@ -25,10 +32,6 @@ function EntryGate({ children }) {
 
 // 아직 옮기지 않은 화면: [주소, 제목 [한, 영], 옮길 브랜치]
 const COMING_SOON = [
-  ['/places', ['관광지', 'Places'], 'place'],
-  ['/places/:placeId', ['장소 상세', 'Place details'], 'place'],
-  ['/courses', ['추천 코스', 'Walks'], 'place'],
-  ['/courses/:courseId', ['코스 상세', 'Walk details'], 'place'],
   ['/capture', ['사진 촬영', 'Capture'], 'recognition'],
   ['/itineraries', ['내 여행 일정', 'My walks'], 'itinerary'],
   ['/profile', ['마이페이지', 'Profile'], 'auth'],
@@ -52,6 +55,15 @@ export default function App() {
         <Route path="/menu" element={<Menu />} />
         <Route path="/events" element={<Events />} />
         <Route path="/search" element={<Search />} />
+
+        {/* S16 관광지·지도, S12-1~4 장소 상세(+ S12-S 공유), S14 관련 장소, S15 연관 설명, 추천 코스, S20-A 출처 */}
+        <Route path="/places" element={<Places />} />
+        <Route path="/places/:placeId" element={<PlaceDetail />} />
+        <Route path="/places/:placeId/related" element={<RelatedPlaces />} />
+        <Route path="/places/:placeId/related/:targetId" element={<Relation />} />
+        <Route path="/courses" element={<Courses />} />
+        <Route path="/courses/:courseId" element={<CourseDetail />} />
+        <Route path="/credits" element={<Credits />} />
 
         {COMING_SOON.map(([path, title, branch]) => (
           <Route key={path} path={path} element={<ComingSoon title={title} branch={branch} />} />
