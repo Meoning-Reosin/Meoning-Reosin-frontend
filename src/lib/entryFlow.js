@@ -31,7 +31,7 @@ export const locationAlwaysAllowed = () => locationChoice() === 'always'
 export const locationAllowed = () => ['always', 'once'].includes(locationChoice())
 
 // --- 개인정보 수집·이용 동의 (S06-A): 'agreed' | 'declined' | '' ---
-// TODO(auth 브랜치): 로그인 후 가입 마치기(API 6)에 이 값을 agree_privacy 로 보낸다.
+// 가입 마치기(S18, Signup.jsx)에서 이 값으로 개인정보 동의를 미리 체크해 둔다.
 export const privacyConsent = () => local.get('privacy_consent', '')
 export const setPrivacyConsent = (value) => local.set('privacy_consent', value)
 
@@ -56,6 +56,9 @@ export function finishEntry() {
 
 // --- 온보딩 (S03~S05): 홈 위에 뜨는 3단계 안내 ---
 export const coachPending = () => session.get('coach_pending', false)
+
+/** 설정의 '온보딩 다시 보기': 홈에 가면 다시 뜬다. */
+export const replayCoach = () => session.set('coach_pending', true)
 
 export function finishCoach(skipNextTime) {
   session.set('coach_pending', false)

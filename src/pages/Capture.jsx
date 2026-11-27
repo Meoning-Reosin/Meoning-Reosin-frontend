@@ -5,6 +5,8 @@
  */
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
+import { updateConsents } from '../api/auth.js'
+import { useAuth } from '../auth/AuthContext.jsx'
 import BottomNav from '../components/BottomNav.jsx'
 import Header from '../components/Header.jsx'
 import Icon from '../components/icons.jsx'
@@ -20,6 +22,7 @@ export default function Capture() {
   const { t } = useLanguage()
   const navigate = useNavigate()
   const { pickFromGallery, pickWithCameraApp } = usePhotoPicker()
+  const { user } = useAuth()
   const [ready, setReady] = useState(photoAccessAgreed)
   const [access, setAccess] = useState(false)
   const [training, setTraining] = useState(false)
@@ -30,6 +33,8 @@ export default function Capture() {
       return
     }
     agreePhotoAccess(training)
+    // 로그인했으면 백엔드 동의 기록에도 남긴다 (API 43). 실패해도 촬영은 계속할 수 있게 둔다.
+    if (user) updateConsents({ camera: true, photo_training: training }).catch(() => {})
     setReady(true)
   }
 
