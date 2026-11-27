@@ -8,12 +8,14 @@ import { Navigate, Route, Routes } from 'react-router-dom'
 import AppShell from './components/AppShell.jsx'
 import { entryDone, introPlayed } from './lib/entryFlow.js'
 import ComingSoon from './pages/ComingSoon.jsx'
+import Events from './pages/Events.jsx'
 import Home from './pages/Home.jsx'
 import Language from './pages/Language.jsx'
 import LocationConsent from './pages/LocationConsent.jsx'
 import Menu from './pages/Menu.jsx'
 import Opening from './pages/Opening.jsx'
 import PrivacyConsent from './pages/PrivacyConsent.jsx'
+import Search from './pages/Search.jsx'
 
 /** 첫 진입을 마친 뒤에만 홈을 보여 준다. */
 function EntryGate({ children }) {
@@ -24,11 +26,13 @@ function EntryGate({ children }) {
 // 아직 옮기지 않은 화면: [주소, 제목 [한, 영], 옮길 브랜치]
 const COMING_SOON = [
   ['/places', ['관광지', 'Places'], 'place'],
+  ['/places/:placeId', ['장소 상세', 'Place details'], 'place'],
+  ['/courses', ['추천 코스', 'Walks'], 'place'],
+  ['/courses/:courseId', ['코스 상세', 'Walk details'], 'place'],
   ['/capture', ['사진 촬영', 'Capture'], 'recognition'],
   ['/itineraries', ['내 여행 일정', 'My walks'], 'itinerary'],
   ['/profile', ['마이페이지', 'Profile'], 'auth'],
   ['/favorites', ['내 찜 목록', 'My favorites'], 'bookmark'],
-  ['/events', ['서울 행사 소식', 'Seoul events'], 'home'],
   ['/community', ['전체 공개 코스', 'Community walks'], 'public-course'],
   ['/settings', ['서비스 설정', 'Service settings'], 'auth'],
 ]
@@ -43,9 +47,11 @@ export default function App() {
         <Route path="/location" element={<LocationConsent />} />
         <Route path="/privacy-consent" element={<PrivacyConsent />} />
 
-        {/* S07 홈, S07-A 전체 메뉴 */}
+        {/* S07 홈(+ S03~S05 온보딩), S07-A 전체 메뉴, S07-E 서울 행사 소식, S08 장소 검색 */}
         <Route index element={<EntryGate><Home /></EntryGate>} />
         <Route path="/menu" element={<Menu />} />
+        <Route path="/events" element={<Events />} />
+        <Route path="/search" element={<Search />} />
 
         {COMING_SOON.map(([path, title, branch]) => (
           <Route key={path} path={path} element={<ComingSoon title={title} branch={branch} />} />
