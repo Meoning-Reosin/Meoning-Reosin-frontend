@@ -6,7 +6,7 @@
  * 백엔드: GET /places/{id}, /places/{id}/operating-info, /places/{id}/script
  * 혼잡도는 서울시 실시간 도시데이터 연동 전이라 '준비 중'으로 둔다.
  * 찜(♥): 로그인 안 했으면 로그인 안내 창. 로그인 상태가 바뀌면 상세를 다시 받아 찜 여부를 맞춘다.
- * TODO(itinerary 브랜치): 일정에 담기 버튼
+ * 일정에 담기(책갈피 버튼): 로그인 안 했으면 로그인 안내 창, 했으면 '어느 일정에 담을까요?' 창.
  */
 import { useEffect, useState } from 'react'
 import { useNavigate, useParams, useSearchParams } from 'react-router-dom'
@@ -18,6 +18,7 @@ import Header from '../components/Header.jsx'
 import Photo from '../components/Photo.jsx'
 import ShareDialog from '../components/ShareDialog.jsx'
 import Icon from '../components/icons.jsx'
+import ItineraryPicker from '../components/ItineraryPicker.jsx'
 import { useLanguage } from '../i18n/LanguageContext.jsx'
 import useBookmark from '../lib/useBookmark.js'
 
@@ -128,8 +129,9 @@ export default function PlaceDetail() {
   const [params, setParams] = useSearchParams()
   const tab = Number(params.get('tab')) || 0
   const [sharing, setSharing] = useState(false)
+  const [picking, setPicking] = useState(false)
 
-  const { user } = useAuth()
+  const { user, requireLogin } = useAuth()
   // user?.id 를 넣어서 로그인·로그아웃하면 찜 여부(is_bookmarked)를 다시 받는다.
   const detail = useLazy(() => getPlace(placeId), true, [placeId, lang, user?.id ?? 'guest'])
   const bookmark = useBookmark(detail.data)
@@ -201,6 +203,17 @@ export default function PlaceDetail() {
               >
                 {bookmark.saved ? '♥' : <Icon name="heart" />}
               </button>
+              <button
+                className="icon bookmark"
+                aria-label={t('내 일정에 추가', 'Add to itinerary')}
+                title={t('내 일정에 추가', 'Add to itinerary')}
+                onClick={() => requireLogin(`/places/${place.place_id}`) && setPicking(true)}
+              >
+                <svg viewBox="0 0 24 24" aria-hidden="true">
+                  <path d="M6 3h12v18l-6-4-6 4z" />
+                  <path d="M9 10h6m-3-3v6" />
+                </svg>
+              </button>
             </div>
           </div>
           <div className="small">
@@ -237,6 +250,7 @@ export default function PlaceDetail() {
       </div>
       <BottomNav />
 
+      {picking && <ItineraryPicker placeId={place.place_id} onClose={() => setPicking(false)} />}
       {sharing && (
         <ShareDialog title={name} url={`${window.location.origin}/places/${place.place_id}`} onClose={() => setSharing(false)} />
       )}
