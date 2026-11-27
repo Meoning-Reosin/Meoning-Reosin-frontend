@@ -15,6 +15,7 @@ import CourseDetail from './pages/CourseDetail.jsx'
 import Courses from './pages/Courses.jsx'
 import Credits from './pages/Credits.jsx'
 import Events from './pages/Events.jsx'
+import Favorites from './pages/Favorites.jsx'
 import Home from './pages/Home.jsx'
 import Language from './pages/Language.jsx'
 import LocationConsent from './pages/LocationConsent.jsx'
@@ -43,7 +44,7 @@ function EntryGate({ children }) {
 // 아직 옮기지 않은 화면: [주소, 제목 [한, 영], 옮길 브랜치]
 const COMING_SOON = [
   ['/itineraries', ['내 여행 일정', 'My walks'], 'itinerary'],
-  ['/favorites', ['내 찜 목록', 'My favorites'], 'bookmark'],
+  ['/favorites/walks', ['내가 찜한 공개 코스', 'Public walks I saved'], 'public-course'],
   ['/community', ['전체 공개 코스', 'Community walks'], 'public-course'],
 ]
 
@@ -85,6 +86,9 @@ export default function App() {
         <Route path="/profile" element={<Profile />} />
         <Route path="/account" element={<Account />} />
         <Route path="/settings" element={<Settings />} />
+
+        {/* S21 내 찜 목록 (장소 상세의 ♥ 버튼은 PlaceDetail) */}
+        <Route path="/favorites" element={<Favorites />} />
 
         {COMING_SOON.map(([path, title, branch]) => (
           <Route key={path} path={path} element={<ComingSoon title={title} branch={branch} />} />
