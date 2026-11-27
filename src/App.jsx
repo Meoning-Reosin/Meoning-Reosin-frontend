@@ -7,6 +7,8 @@
 import { Navigate, Route, Routes } from 'react-router-dom'
 import AppShell from './components/AppShell.jsx'
 import { entryDone, introPlayed } from './lib/entryFlow.js'
+import CameraPage from './pages/CameraPage.jsx'
+import Capture from './pages/Capture.jsx'
 import ComingSoon from './pages/ComingSoon.jsx'
 import CourseDetail from './pages/CourseDetail.jsx'
 import Courses from './pages/Courses.jsx'
@@ -17,9 +19,11 @@ import Language from './pages/Language.jsx'
 import LocationConsent from './pages/LocationConsent.jsx'
 import Menu from './pages/Menu.jsx'
 import Opening from './pages/Opening.jsx'
+import PhotoReview from './pages/PhotoReview.jsx'
 import PlaceDetail from './pages/PlaceDetail.jsx'
 import Places from './pages/Places.jsx'
 import PrivacyConsent from './pages/PrivacyConsent.jsx'
+import RecognitionFailed from './pages/RecognitionFailed.jsx'
 import RelatedPlaces from './pages/RelatedPlaces.jsx'
 import Relation from './pages/Relation.jsx'
 import Search from './pages/Search.jsx'
@@ -32,7 +36,6 @@ function EntryGate({ children }) {
 
 // 아직 옮기지 않은 화면: [주소, 제목 [한, 영], 옮길 브랜치]
 const COMING_SOON = [
-  ['/capture', ['사진 촬영', 'Capture'], 'recognition'],
   ['/itineraries', ['내 여행 일정', 'My walks'], 'itinerary'],
   ['/profile', ['마이페이지', 'Profile'], 'auth'],
   ['/favorites', ['내 찜 목록', 'My favorites'], 'bookmark'],
@@ -64,6 +67,12 @@ export default function App() {
         <Route path="/courses" element={<Courses />} />
         <Route path="/courses/:courseId" element={<CourseDetail />} />
         <Route path="/credits" element={<Credits />} />
+
+        {/* S09-A 사진 접근 동의(+ 촬영·갤러리 선택), S09 카메라, S10-A 미리보기 → S10 인식 중, S11 인식 실패 */}
+        <Route path="/capture" element={<Capture />} />
+        <Route path="/capture/camera" element={<CameraPage />} />
+        <Route path="/capture/review" element={<PhotoReview />} />
+        <Route path="/capture/failed" element={<RecognitionFailed />} />
 
         {COMING_SOON.map(([path, title, branch]) => (
           <Route key={path} path={path} element={<ComingSoon title={title} branch={branch} />} />
