@@ -17,6 +17,10 @@ import Credits from './pages/Credits.jsx'
 import Events from './pages/Events.jsx'
 import Favorites from './pages/Favorites.jsx'
 import Home from './pages/Home.jsx'
+import Itineraries from './pages/Itineraries.jsx'
+import ItineraryDetail from './pages/ItineraryDetail.jsx'
+import ItineraryRoute from './pages/ItineraryRoute.jsx'
+import Journey from './pages/Journey.jsx'
 import Language from './pages/Language.jsx'
 import LocationConsent from './pages/LocationConsent.jsx'
 import Login from './pages/Login.jsx'
@@ -43,7 +47,6 @@ function EntryGate({ children }) {
 
 // 아직 옮기지 않은 화면: [주소, 제목 [한, 영], 옮길 브랜치]
 const COMING_SOON = [
-  ['/itineraries', ['내 여행 일정', 'My walks'], 'itinerary'],
   ['/favorites/walks', ['내가 찜한 공개 코스', 'Public walks I saved'], 'public-course'],
   ['/community', ['전체 공개 코스', 'Community walks'], 'public-course'],
 ]
@@ -89,6 +92,12 @@ export default function App() {
 
         {/* S21 내 찜 목록 (장소 상세의 ♥ 버튼은 PlaceDetail) */}
         <Route path="/favorites" element={<Favorites />} />
+
+        {/* S19 내 여행 일정, S19-A 일정 상세, S19-B 동선 지도, S19-J 여행 진행·방문 체크 */}
+        <Route path="/itineraries" element={<Itineraries />} />
+        <Route path="/itineraries/:itineraryId" element={<ItineraryDetail />} />
+        <Route path="/itineraries/:itineraryId/route" element={<ItineraryRoute />} />
+        <Route path="/itineraries/:itineraryId/journey" element={<Journey />} />
 
         {COMING_SOON.map(([path, title, branch]) => (
           <Route key={path} path={path} element={<ComingSoon title={title} branch={branch} />} />

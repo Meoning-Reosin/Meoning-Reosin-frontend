@@ -2,18 +2,22 @@
  * 코스 상세. 주소: /courses/1 (프로토타입 'CURATED JOURNEY' 테마 화면 모양)
  *   대표 사진 → 제목·부제·설명 → 이야기의 순서(장소 목록, 관람 시간과 앞 장소에서 걷는 시간)
  * 백엔드: GET /courses/{id}
- * TODO(itinerary 브랜치): '이 코스 일정에 담기' 버튼 (API 29 POST /itineraries/courses)
+ * '이 코스 일정에 담기': 로그인 확인 후 일정 고르기 창 (API 31 POST /itineraries/courses)
  */
 import { useEffect, useState } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
 import { getCourse } from '../api/places.js'
+import { useAuth } from '../auth/AuthContext.jsx'
 import BottomNav from '../components/BottomNav.jsx'
 import Header from '../components/Header.jsx'
+import ItineraryPicker from '../components/ItineraryPicker.jsx'
 import Photo from '../components/Photo.jsx'
 import { useLanguage } from '../i18n/LanguageContext.jsx'
 
 export default function CourseDetail() {
   const { lang, t } = useLanguage()
+  const { requireLogin } = useAuth()
+  const [picking, setPicking] = useState(false)
   const navigate = useNavigate()
   const { courseId } = useParams()
   const [state, setState] = useState({ key: null, course: null, error: null })
@@ -55,6 +59,9 @@ export default function CourseDetail() {
                 {t('개의 장소', ' places')} · {t('약', 'about')} {course.total_minutes}
                 {t('분 도보 여행', ' min walking journey')}
               </div>
+              <button className="primary" onClick={() => requireLogin(`/courses/${courseId}`) && setPicking(true)}>
+                {t('이 코스 일정에 담기', 'Save this journey')}
+              </button>
             </div>
             <section className="section">
               <div className="eyebrow">THE JOURNEY</div>
@@ -84,6 +91,12 @@ export default function CourseDetail() {
         )}
       </div>
       <BottomNav />
+      {picking && course && (
+        <ItineraryPicker
+          course={{ course_id: course.course_id, title: t(course.title, course.title_en) }}
+          onClose={() => setPicking(false)}
+        />
+      )}
     </>
   )
 }
