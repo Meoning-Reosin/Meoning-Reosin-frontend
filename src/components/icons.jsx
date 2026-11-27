@@ -48,6 +48,7 @@ const paths = {
     </>
   ),
   arrow: <path d="M4 12h15m-6-6 6 6-6 6" />,
+  pencil: <path d="M4 20l4.3-.9L19 8.4a2.2 2.2 0 0 0-3.1-3.1L5.2 16zM14.9 6.3l2.8 2.8" />,
   soundOn: (
     <>
       <path d="M3 9v6h4l5 4V5L7 9H3z" />

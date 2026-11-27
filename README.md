@@ -13,10 +13,21 @@ cp .env.example .env.local
 npm run dev
 ```
 
-3. http://localhost:5173 을 연다.
+3. **http://127.0.0.1:5173** 을 연다. (`localhost`로 열면 로그인 쿠키가 안 붙는다)
 
-개발 중에는 `vite.config.js`의 프록시가 `/api` 요청을 `http://localhost:8000`으로 넘긴다.
-그래서 CORS 설정 없이 쿠키 로그인이 된다. 백엔드 `.env`의 `FRONTEND_URL`은 `http://localhost:5173`으로 둔다.
+개발 중에는 `vite.config.js`의 프록시가 `/api` 요청을 `http://127.0.0.1:8000`으로 넘긴다.
+그래서 CORS 설정 없이 쿠키 로그인이 된다.
+
+### Google 로그인을 쓰려면 백엔드 `.env`
+
+```
+FRONTEND_URL=http://127.0.0.1:5173/login/done
+FRONTEND_SIGNUP_URL=http://127.0.0.1:5173/signup
+```
+
+- 기존 회원은 로그인 후 `/login/done`으로, 처음 온 사람은 약관 동의 화면 `/signup`으로 돌아온다.
+- `.env`를 바꾸면 백엔드를 다시 켠다.
+- Google 앱이 "테스트" 상태라 Google 콘솔에 테스트 사용자로 등록된 계정만 로그인된다.
 
 ## 폴더 구조
 

@@ -7,6 +7,7 @@
 import { Navigate, Route, Routes } from 'react-router-dom'
 import AppShell from './components/AppShell.jsx'
 import { entryDone, introPlayed } from './lib/entryFlow.js'
+import Account from './pages/Account.jsx'
 import CameraPage from './pages/CameraPage.jsx'
 import Capture from './pages/Capture.jsx'
 import ComingSoon from './pages/ComingSoon.jsx'
@@ -17,16 +18,21 @@ import Events from './pages/Events.jsx'
 import Home from './pages/Home.jsx'
 import Language from './pages/Language.jsx'
 import LocationConsent from './pages/LocationConsent.jsx'
+import Login from './pages/Login.jsx'
+import LoginDone from './pages/LoginDone.jsx'
 import Menu from './pages/Menu.jsx'
 import Opening from './pages/Opening.jsx'
 import PhotoReview from './pages/PhotoReview.jsx'
 import PlaceDetail from './pages/PlaceDetail.jsx'
 import Places from './pages/Places.jsx'
 import PrivacyConsent from './pages/PrivacyConsent.jsx'
+import Profile from './pages/Profile.jsx'
 import RecognitionFailed from './pages/RecognitionFailed.jsx'
 import RelatedPlaces from './pages/RelatedPlaces.jsx'
 import Relation from './pages/Relation.jsx'
 import Search from './pages/Search.jsx'
+import Settings from './pages/Settings.jsx'
+import Signup from './pages/Signup.jsx'
 
 /** 첫 진입을 마친 뒤에만 홈을 보여 준다. */
 function EntryGate({ children }) {
@@ -37,10 +43,8 @@ function EntryGate({ children }) {
 // 아직 옮기지 않은 화면: [주소, 제목 [한, 영], 옮길 브랜치]
 const COMING_SOON = [
   ['/itineraries', ['내 여행 일정', 'My walks'], 'itinerary'],
-  ['/profile', ['마이페이지', 'Profile'], 'auth'],
   ['/favorites', ['내 찜 목록', 'My favorites'], 'bookmark'],
   ['/community', ['전체 공개 코스', 'Community walks'], 'public-course'],
-  ['/settings', ['서비스 설정', 'Service settings'], 'auth'],
 ]
 
 export default function App() {
@@ -73,6 +77,14 @@ export default function App() {
         <Route path="/capture/camera" element={<CameraPage />} />
         <Route path="/capture/review" element={<PhotoReview />} />
         <Route path="/capture/failed" element={<RecognitionFailed />} />
+
+        {/* S17 로그인(+ 로그인 후 돌아오는 /login/done), S18 가입 동의, S17-A·S23 마이페이지, S23-A·S23-D 계정, S20 설정 */}
+        <Route path="/login" element={<Login />} />
+        <Route path="/login/done" element={<LoginDone />} />
+        <Route path="/signup" element={<Signup />} />
+        <Route path="/profile" element={<Profile />} />
+        <Route path="/account" element={<Account />} />
+        <Route path="/settings" element={<Settings />} />
 
         {COMING_SOON.map(([path, title, branch]) => (
           <Route key={path} path={path} element={<ComingSoon title={title} branch={branch} />} />
